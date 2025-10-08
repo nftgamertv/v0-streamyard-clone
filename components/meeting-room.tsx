@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { LiveKitRoom, ParticipantTile, RoomAudioRenderer, ControlBar, useTracks } from "@livekit/components-react"
+import { LiveKitRoom, ParticipantTile, RoomAudioRenderer, ControlBar, useTracks, Chat } from "@livekit/components-react"
 import { Track, type LocalParticipant, type RemoteParticipant } from "livekit-client"
 import "@livekit/components-styles"
 import { LIVEKIT_CONFIG } from "@/lib/livekit-config"
@@ -10,7 +10,7 @@ import { RoomHeader } from "./room-header"
 import { BackroomPanel } from "./backroom-panel"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
-import { AlertCircle } from "lucide-react"
+import { AlertCircle, MessageSquare, X } from "lucide-react"
 
 interface MeetingRoomProps {
   roomId: string
@@ -204,6 +204,7 @@ export function MeetingRoom({ roomId, participantName, initialSettings }: Meetin
   const [missingVars, setMissingVars] = useState<string[]>([])
   const [layout, setLayout] = useState<LayoutType>("grid")
   const [isUserHost, setIsUserHost] = useState(false)
+  const [showChat, setShowChat] = useState(false)
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -322,6 +323,36 @@ export function MeetingRoom({ roomId, participantName, initialSettings }: Meetin
             <VideoConferenceLayout layout={layout} onLayoutChange={setLayout} />
           </div>
           {isUserHost && <BackroomPanel />}
+          {showChat && (
+            <div className="w-80 bg-background/95 backdrop-blur-sm border-l border-border/30 flex flex-col relative z-50 pointer-events-auto">
+              <div className="flex items-center justify-between p-4 border-b border-border/30">
+                <div className="flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5" />
+                  <h3 className="font-semibold">Chat</h3>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowChat(false)}
+                  className="h-8 w-8 relative z-10 hover:bg-accent"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+              <div className="flex-1 overflow-hidden">
+                <Chat />
+              </div>
+            </div>
+          )}
+          {!showChat && (
+            <Button
+              onClick={() => setShowChat(true)}
+              className="fixed bottom-24 right-6 h-12 w-12 rounded-full shadow-lg z-50 pointer-events-auto hover:scale-110 transition-transform"
+              size="icon"
+            >
+              <MessageSquare className="w-5 h-5" />
+            </Button>
+          )}
         </div>
         <div className="border-t border-border/30 bg-background/95 backdrop-blur-sm relative z-40 pointer-events-auto">
           <ControlBar variation="verbose" />
