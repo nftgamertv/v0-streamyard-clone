@@ -16,6 +16,7 @@
     "@livekit/krisp-noise-filter": "latest",
     "@radix-ui/react-dropdown-menu": "2.1.16-rc.1751501220403",
     "@radix-ui/react-label": "latest",
+    "@radix-ui/react-scroll-area": "latest",
     "@radix-ui/react-select": "latest",
     "@types/dom-mediacapture-record": "latest",
     "@vercel/analytics": "latest",
